@@ -33,7 +33,7 @@ class CreateTransactionService {
     });
 
     if (type !== 'income' && type !== 'outcome') {
-      throw new AppError(`${type}: invalid type for transaction`);
+      throw new AppError('invalid type for transaction');
     }
 
     if (type === 'outcome') {

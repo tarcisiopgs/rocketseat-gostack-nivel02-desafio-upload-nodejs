@@ -29,10 +29,14 @@
     "no-await-in-loop": "off",
     "no-restricted-syntax": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
+    "radix": "off",
+    "no-return-await": "off",
+
     "no-underscore-dangle": "off",
     "prettier/prettier": "error",
     "class-methods-use-this": "off",
     "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-unused-vars": ["error", {
       "argsIgnorePattern": "_"
     }],

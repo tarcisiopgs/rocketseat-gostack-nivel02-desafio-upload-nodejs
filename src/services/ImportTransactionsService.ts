@@ -11,41 +11,56 @@ interface Request {
   file: Express.Multer.File;
 }
 
+interface Line {
+  title: string;
+  type: string;
+  value: string;
+  category: string;
+}
+
+interface LineRequest {
+  title: string;
+  value: number;
+  type: 'income' | 'outcome';
+  category: string;
+}
+
 class ImportTransactionsService {
-  private lines: string[] = [];
+  private lines: Line[] = [];
 
   async execute({ file }: Request): Promise<Transaction[]> {
     const createTransactionService = new CreateTransactionService();
 
-    return new Promise<Transaction[]>(resolve => {
-      if (file.mimetype !== 'text/csv') {
-        throw new AppError('The uploaded file must be a CSV');
-      }
+    if (file.mimetype !== 'text/csv') {
+      throw new AppError('The uploaded file must be a CSV');
+    }
 
+    return new Promise<Transaction[]>(resolve => {
       createReadStream(join(uploadConfig.directory, file.filename))
-        .pipe(csvParser())
-        .on('data', data => {
-          this.lines.push(Object.values(data)[0] as string);
+        .pipe(csvParser(['title', 'type', 'value', 'category']))
+        .on('data', (data: Line) => {
+          if (data.title !== 'title') {
+            if (
+              data.type.trim() !== 'income' &&
+              data.type.trim() !== 'outcome'
+            ) {
+              throw new AppError('invalid type for transaction');
+            }
+            this.lines.push(data);
+          }
         })
         .on('end', async () => {
-          const results: Transaction[] = [];
-          for (const line of this.lines) {
-            // @ts-ignore
-            const [title, type, value, category]: [
-              string,
-              'income' | 'outcome',
-              number,
-              string,
-            ] = line.split(';');
+          const results = [];
 
-            const transaction: Transaction = await createTransactionService.execute(
-              {
-                title,
-                type,
-                value,
-                category,
-              },
-            );
+          for (const { title, type, value, category } of this.lines) {
+            const transaction = await createTransactionService.execute(<
+              LineRequest
+            >{
+              title: title.trim(),
+              type: type.trim(),
+              value: parseInt(value.trim()),
+              category: category.trim(),
+            });
 
             results.push(transaction);
           }
