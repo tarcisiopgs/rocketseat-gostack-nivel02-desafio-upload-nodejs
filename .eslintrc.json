@@ -24,6 +24,11 @@
     "prettier"
   ],
   "rules": {
+    "no-console": "off",
+    "no-plusplus": "off",
+    "no-await-in-loop": "off",
+    "no-restricted-syntax": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
     "no-underscore-dangle": "off",
     "prettier/prettier": "error",
     "class-methods-use-this": "off",
