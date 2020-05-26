@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -27,7 +27,7 @@ class Transaction {
   @Column()
   category_id: string;
 
-  @OneToOne(() => Category)
+  @ManyToOne(() => Category, category => category.transaction, { eager: true })
   @JoinColumn({ name: 'category_id' })
   category: Category;
 

@@ -31,7 +31,10 @@ class ImportTransactionsService {
   async execute({ file }: Request): Promise<Transaction[]> {
     const createTransactionService = new CreateTransactionService();
 
-    if (file.mimetype !== 'text/csv') {
+    if (
+      file.mimetype !== 'text/csv' &&
+      file.mimetype !== 'application/vnd.ms-excel'
+    ) {
       throw new AppError('The uploaded file must be a CSV');
     }
 

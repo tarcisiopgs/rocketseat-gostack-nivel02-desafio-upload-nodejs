@@ -1,3 +1,3 @@
 import app from './app';
 
-app.listen(8000, () => console.log('🚀 Server started on port 8000!'));
+app.listen(3333, () => console.log('🚀 Server started on port 3333!'));
